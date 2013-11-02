@@ -27,3 +27,19 @@ test 'returns listed attributes and their values' do
 
   assert_equal result, presenter.attributes
 end
+
+Post = Struct.new :id, :title
+
+class PostPresenter < JsonPresenter
+  attribute :id
+  attribute :title
+end
+
+test 'converts attributes hash to json' do
+  post = Post.new 1, 'tsunami'
+  presenter = PostPresenter.new post
+
+  result = post.to_h.to_json
+
+  assert_equal result, presenter.to_json
+end

@@ -25,3 +25,11 @@ class Presenter
     end
   end
 end
+
+require 'json'
+
+class JsonPresenter < Presenter
+  def to_json
+    attributes.to_json
+  end
+end
