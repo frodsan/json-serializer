@@ -33,11 +33,44 @@ class PostWithRootSerializer < JsonSerializer
   attribute :title
 end
 
-test 'defines root' do
+test 'serializes object with root key' do
   post = Post.new 1, 'tsunami'
   serializer = PostWithRootSerializer.new post
 
   result = { post: { id: 1, title: 'tsunami' } }.to_json
+
+  assert_equal result, serializer.to_json
+end
+
+User = Struct.new :id, :name, :lastname
+
+class UsersSerializer < ArrayJsonSerializer
+  def initialize object
+    super object, UserSerializer
+  end
+
+  class UserSerializer < JsonSerializer
+    attribute :id
+    attribute :fullname
+
+    def fullname
+      object.name + ' ' + object.lastname
+    end
+  end
+end
+
+test 'serializes array' do
+  users = [
+    User.new(1, 'sonny', 'moore'),
+    User.new(2, 'anton', 'zaslavski')
+  ]
+
+  serializer = UsersSerializer.new users
+
+  result = [
+    { id: 1, fullname: 'sonny moore' },
+    { id: 2, fullname: 'anton zaslavski' }
+  ].to_json
 
   assert_equal result, serializer.to_json
 end
