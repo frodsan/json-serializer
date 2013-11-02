@@ -1,9 +1,9 @@
 require 'cutest'
 require_relative '../lib/presenters'
 
-Post = Struct.new :id, :name, :lastname
+User = Struct.new :id, :name, :lastname
 
-class PostPresenter < Presenter
+class UserPresenter < Presenter
   attribute :id
   attribute :fullname
 
@@ -13,15 +13,15 @@ class PostPresenter < Presenter
 end
 
 test 'defines method for given attribute' do
-  post = Post.new 1
-  presenter = PostPresenter.new post
+  user = User.new 1
+  presenter = UserPresenter.new user
 
-  assert_equal post.id, presenter.id
+  assert_equal user.id, presenter.id
 end
 
 test 'returns listed attributes and their values' do
-  post = Post.new 1, 'sonny', 'moore'
-  presenter = PostPresenter.new post
+  user = User.new 1, 'sonny', 'moore'
+  presenter = UserPresenter.new user
 
   result = { id: 1, fullname: 'sonny moore' }
 
