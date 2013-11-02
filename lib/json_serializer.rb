@@ -2,13 +2,7 @@ require 'json'
 
 class JsonSerializer
   def self.attribute name
-    return if attributes.include? name
-
-    attributes << name
-
-    define_method name do
-      object.send name
-    end if !method_defined? name
+    attributes << name if !attributes.include? name
   end
 
   def self.attributes
@@ -31,7 +25,7 @@ class JsonSerializer
 
   def attributes
     self.class.attributes.each_with_object({}) do |name, hash|
-      hash[name] = send name
+      hash[name] = object.send name
     end
   end
 
