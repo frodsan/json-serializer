@@ -3,7 +3,7 @@ require_relative '../lib/json_serializer'
 
 Post = Struct.new :id, :title
 
-class PostPresenter < JsonSerializer
+class PostSerializer < JsonSerializer
   attribute :id
   attribute :title
   attribute :slug
@@ -15,7 +15,7 @@ end
 
 test 'converts defined attributes into json' do
   post = Post.new 1, 'tsunami'
-  presenter = PostPresenter.new post
+  serializer = PostSerializer.new post
 
   result = {
     id: 1,
@@ -23,10 +23,10 @@ test 'converts defined attributes into json' do
     slug: '1-tsunami'
   }
 
-  assert_equal result.to_json, presenter.to_json
+  assert_equal result.to_json, serializer.to_json
 end
 
-class PostWithRootPresenter < JsonSerializer
+class PostWithRootSerializer < JsonSerializer
   root :post
 
   attribute :id
@@ -35,9 +35,9 @@ end
 
 test 'defines root' do
   post = Post.new 1, 'tsunami'
-  presenter = PostWithRootPresenter.new post
+  serializer = PostWithRootSerializer.new post
 
   result = { post: post.to_h }.to_json
 
-  assert_equal result, presenter.to_json
+  assert_equal result, serializer.to_json
 end
