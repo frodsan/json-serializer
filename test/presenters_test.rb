@@ -43,3 +43,19 @@ test 'converts attributes hash to json' do
 
   assert_equal result, presenter.to_json
 end
+
+class PostWithRootPresenter < PostPresenter
+  root :post
+
+  attribute :id
+  attribute :title
+end
+
+test 'defines root' do
+  post = Post.new 1, 'tsunami'
+  presenter = PostWithRootPresenter.new post
+
+  result = { post: post.to_h }.to_json
+
+  assert_equal result, presenter.to_json
+end
