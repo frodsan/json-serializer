@@ -1,10 +1,9 @@
 require 'cutest'
-require_relative '../lib/presenters'
-require_relative '../lib/presenters/json'
+require_relative '../lib/json_serializer'
 
 Post = Struct.new :id, :title
 
-class PostPresenter < JsonPresenter
+class PostPresenter < JsonSerializer
   attribute :id
   attribute :title
 end
@@ -18,7 +17,7 @@ test 'converts attributes hash to json' do
   assert_equal result, presenter.to_json
 end
 
-class PostWithRootPresenter < PostPresenter
+class PostWithRootPresenter < JsonSerializer
   root :post
 
   attribute :id

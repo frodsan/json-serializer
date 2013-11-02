@@ -1,4 +1,6 @@
-class Presenter
+require 'json'
+
+class JsonSerializer
   def self.attribute name
     return if attributes.include? name
 
@@ -13,6 +15,14 @@ class Presenter
     @attributes ||= []
   end
 
+  def self.root key
+    @root = key
+  end
+
+  def self.root_key
+    @root
+  end
+
   attr :object
 
   def initialize object
@@ -22,6 +32,14 @@ class Presenter
   def attributes
     self.class.attributes.each_with_object({}) do |name, hash|
       hash[name] = send name
+    end
+  end
+
+  def to_json
+    if root = self.class.root_key
+      { root => attributes }.to_json
+    else
+      attributes.to_json
     end
   end
 end
