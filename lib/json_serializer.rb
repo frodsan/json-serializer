@@ -25,7 +25,11 @@ class JsonSerializer
 
   def attributes
     self.class.attributes.each_with_object({}) do |name, hash|
-      hash[name] = object.send name
+      hash[name] = if self.class.method_defined? name
+        send name
+      else
+        object.send name
+      end
     end
   end
 

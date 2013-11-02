@@ -6,15 +6,24 @@ Post = Struct.new :id, :title
 class PostPresenter < JsonSerializer
   attribute :id
   attribute :title
+  attribute :slug
+
+  def slug
+    "#{ object.id }-#{ object.title }"
+  end
 end
 
-test 'converts attributes hash to json' do
+test 'converts defined attributes into json' do
   post = Post.new 1, 'tsunami'
   presenter = PostPresenter.new post
 
-  result = post.to_h.to_json
+  result = {
+    id: 1,
+    title: 'tsunami',
+    slug: '1-tsunami'
+  }
 
-  assert_equal result, presenter.to_json
+  assert_equal result.to_json, presenter.to_json
 end
 
 class PostWithRootPresenter < JsonSerializer
