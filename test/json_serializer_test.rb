@@ -1,7 +1,7 @@
 require 'cutest'
 require_relative '../lib/json_serializer'
 
-Post = Struct.new :id, :title
+Post = Struct.new :id, :title, :created_at
 
 class PostSerializer < JsonSerializer
   attribute :id
@@ -37,7 +37,7 @@ test 'defines root' do
   post = Post.new 1, 'tsunami'
   serializer = PostWithRootSerializer.new post
 
-  result = { post: post.to_h }.to_json
+  result = { post: { id: 1, title: 'tsunami' } }.to_json
 
   assert_equal result, serializer.to_json
 end
