@@ -62,7 +62,7 @@ class JsonSerializer
 
   def associations
     self.class.associations.each_with_object({}) do |(name, serializer), hash|
-      hash[name] = serializer.new(object.send(name)).serializable_hash
+      hash[name] = serializer.new(object.send(name)).serializable_object
     end
   end
 end

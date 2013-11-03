@@ -26,7 +26,7 @@ test 'converts defined attributes into json' do
 end
 
 class User
-  attr_accessor :id, :name, :lastname, :organization
+  attr_accessor :id, :name, :lastname, :organization, :organizations
 
   def initialize attrs
     attrs.each do |name, value|
@@ -114,4 +114,85 @@ test 'serializes array with association' do
   ].to_json
 
   assert_equal result, UserWithOrganizationSerializer.new(users).to_json
+end
+
+class UserWithOrganizationsSerializer < JsonSerializer
+  attribute :id
+  attribute :name
+
+  association :organizations, OrganizationSerializer
+end
+
+test 'serializes object with collection' do
+  user = User.new id: 1, name: 'sonny'
+  user.organizations = [
+    Organization.new(1, 'enterprise'),
+    Organization.new(2, 'evil')
+  ]
+
+  result = {
+    id: 1,
+    name: 'sonny',
+    organizations: [
+      {
+        id: 1,
+        name: 'enterprise'
+      },
+      {
+        id: 2,
+        name: 'evil'
+      }
+    ]
+  }.to_json
+
+  assert_equal result, UserWithOrganizationsSerializer.new(user).to_json
+end
+
+test 'serializes array with nested collections' do
+  users = [
+    User.new(
+      id: 1,
+      name: 'sonny',
+      organizations: [
+        Organization.new(1, 'enterprise'),
+        Organization.new(2, 'evil'),
+      ]
+    ),
+    User.new(
+      id: 2,
+      name: 'anton',
+      organizations: [
+        Organization.new(3, 'showtek')
+      ]
+    )
+  ]
+
+  result = [
+    {
+      id: 1,
+      name: 'sonny',
+      organizations: [
+        {
+          id: 1,
+          name: 'enterprise'
+        },
+        {
+          id: 2,
+          name: 'evil'
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'anton',
+      organizations: [
+        {
+          id: 3,
+          name: 'showtek'
+        }
+      ]
+    }
+  ].to_json
+
+  assert_equal result, UserWithOrganizationsSerializer.new(users).to_json
 end
