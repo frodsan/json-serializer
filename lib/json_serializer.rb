@@ -19,42 +19,27 @@ class JsonSerializer
     serializable_object.to_json
   end
 
-  def serializable_object # :nodoc
+  def serializable_object
     if object.respond_to? :to_ary
-      SerializableArray
+      serializable_array
     else
-      SerializableHash
-    end.new(object, self).serializable_object
-  end
-
-  private
-
-  class Serializable
-    attr :object, :serializer
-
-    def initialize object, context
-      @object  = object
-      @context = context
+      serializable_hash
     end
   end
 
-  class SerializableHash < Serializable
-    def serializable_object
-      context.class.attributes.each_with_object({}) do |name, hash|
-        hash[name] = if context.class.method_defined? name
-          context.send name
-        else
-          object.send name
-        end
+  def serializable_hash
+    self.class.attributes.each_with_object({}) do |name, hash|
+      hash[name] = if self.class.method_defined? name
+        self.send name
+      else
+        object.send name
       end
     end
   end
 
-  class SerializableArray < Serializable
-    def serializable_object
-      object.to_ary.map do |item|
-        context.class.new(item).serializable_object
-      end
+  def serializable_array
+    object.to_ary.map do |item|
+      self.class.new(item).serializable_hash
     end
   end
 end
