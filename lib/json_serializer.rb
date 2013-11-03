@@ -24,10 +24,10 @@ class JsonSerializer
   end
 
   def to_json options={}
-    if root = options[:root]
-      { root => serializable_object }.to_json
+    if root = options.delete(:root)
+      { root => serializable_object }.to_json options
     else
-      serializable_object.to_json
+      serializable_object.to_json options
     end
   end
 
