@@ -9,6 +9,14 @@ class JsonSerializer
     @attributes ||= []
   end
 
+  def self.association name, serializer
+    associations[name] = serializer if !associations[name]
+  end
+
+  def self.associations
+    @associations ||= {}
+  end
+
   attr :object
 
   def initialize object
@@ -19,7 +27,9 @@ class JsonSerializer
     serializable_object.to_json
   end
 
-  def serializable_object
+  protected
+
+  def serializable_object # :nodoc:
     if object.respond_to? :to_ary
       serializable_array
     else
@@ -27,7 +37,20 @@ class JsonSerializer
     end
   end
 
-  def serializable_hash
+  def serializable_hash # :nodoc:
+    hash = attributes
+    hash.merge! associations
+  end
+
+  def serializable_array # :nodoc:
+    object.to_ary.map do |item|
+      self.class.new(item).serializable_hash
+    end
+  end
+
+  private
+
+  def attributes
     self.class.attributes.each_with_object({}) do |name, hash|
       hash[name] = if self.class.method_defined? name
         self.send name
@@ -37,9 +60,9 @@ class JsonSerializer
     end
   end
 
-  def serializable_array
-    object.to_ary.map do |item|
-      self.class.new(item).serializable_hash
+  def associations
+    self.class.associations.each_with_object({}) do |(name, serializer), hash|
+      hash[name] = serializer.new(object.send(name)).serializable_hash
     end
   end
 end
