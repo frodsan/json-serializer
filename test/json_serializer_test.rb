@@ -28,7 +28,7 @@ end
 class User
   attr_accessor :id, :name, :lastname, :organization, :organizations
 
-  def initialize attrs
+  def initialize attrs={}
     attrs.each do |name, value|
       send "#{name}=", value
     end
@@ -195,4 +195,20 @@ test 'serializes array with nested collections' do
   ].to_json
 
   assert_equal result, UserWithOrganizationsSerializer.new(users).to_json
+end
+
+class UserWithCustomOrganizationSerializer < JsonSerializer
+  association :organizations, OrganizationSerializer
+
+  def organizations
+    [ Organization.new(1, 'enterprise') ]
+  end
+end
+
+test 'implements association method and returns different result' do
+  user = User.new
+
+  result = { organizations: [ { id: 1, name: 'enterprise' } ] }.to_json
+
+  assert_equal result, UserWithCustomOrganizationSerializer.new(user).to_json
 end

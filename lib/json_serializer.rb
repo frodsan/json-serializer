@@ -38,31 +38,28 @@ class JsonSerializer
   end
 
   def serializable_hash # :nodoc:
-    hash = attributes
-    hash.merge! associations
+    attributes.merge associations
   end
 
   def serializable_array # :nodoc:
-    object.to_ary.map do |item|
-      self.class.new(item).serializable_hash
-    end
+    object.to_ary.map { |item| self.class.new(item).serializable_hash }
   end
 
   private
 
   def attributes
     self.class.attributes.each_with_object({}) do |name, hash|
-      hash[name] = if self.class.method_defined? name
-        self.send name
-      else
-        object.send name
-      end
+      hash[name] = result_from_self_or_object name
     end
   end
 
   def associations
     self.class.associations.each_with_object({}) do |(name, serializer), hash|
-      hash[name] = serializer.new(object.send(name)).serializable_object
+      hash[name] = serializer.new(result_from_self_or_object(name)).serializable_object
     end
+  end
+
+  def result_from_self_or_object name
+    self.class.method_defined?(name) ? self.send(name) : object.send(name)
   end
 end
