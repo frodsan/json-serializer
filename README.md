@@ -1,4 +1,4 @@
-serializers
-===========
+json_serializer
+===============
 
-Not ready, proof of Concept.
+Not ready. `ActiveModel::Serializers` outside Rails.
