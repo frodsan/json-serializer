@@ -23,8 +23,12 @@ class JsonSerializer
     @object = object
   end
 
-  def to_json
-    serializable_object.to_json
+  def to_json options={}
+    if root = options[:root]
+      { root => serializable_object }.to_json
+    else
+      serializable_object.to_json
+    end
   end
 
   protected

@@ -212,3 +212,21 @@ test 'implements association method and returns different result' do
 
   assert_equal result, UserWithCustomOrganizationSerializer.new(user).to_json
 end
+
+Person = Struct.new :name
+
+class PersonSerialize < JsonSerializer
+  attribute :name
+end
+
+test 'allows root option' do
+  person = Person.new 'sonny'
+
+  result = { person: person.to_h }.to_json
+
+  assert_equal result, PersonSerialize.new(person).to_json(root: :person)
+
+  result = { people: [person.to_h] }.to_json
+
+  assert_equal result, PersonSerialize.new([person]).to_json(root: :people)
+end
