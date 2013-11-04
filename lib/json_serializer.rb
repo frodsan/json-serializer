@@ -77,11 +77,7 @@ class JsonSerializer
   protected
 
   def serializable_object # :nodoc:
-    if object.respond_to? :to_ary
-      serializable_array
-    else
-      serializable_hash
-    end
+    object.respond_to?(:to_ary) ? serializable_array : serializable_hash
   end
 
   def serializable_hash # :nodoc:
