@@ -68,8 +68,7 @@ end
 class UserWithOrganizationSerializer < JsonSerializer
   attribute :id
   attribute :name
-
-  association :organization, OrganizationSerializer
+  attribute :organization, OrganizationSerializer
 end
 
 test 'serializes object with association' do
@@ -119,8 +118,7 @@ end
 class UserWithOrganizationsSerializer < JsonSerializer
   attribute :id
   attribute :name
-
-  association :organizations, OrganizationSerializer
+  attribute :organizations, OrganizationSerializer
 end
 
 test 'serializes object with collection' do
@@ -198,7 +196,7 @@ test 'serializes array with nested collections' do
 end
 
 class UserWithCustomOrganizationSerializer < JsonSerializer
-  association :organizations, OrganizationSerializer
+  attribute :organizations, OrganizationSerializer
 
   def organizations
     [ Organization.new(1, 'enterprise') ]

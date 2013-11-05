@@ -33,8 +33,8 @@ class JsonSerializer
   #   UserSerializer.new(user).to_json
   #   # => {"id":1,"username":"skrillex","full_name":"sonny moore"}
   #
-  def self.attribute name
-    attributes << name if !attributes.include? name
+  def self.attribute name, serializer = nil
+    attributes[name] = serializer if !attributes[name]
   end
 
   # Return an array with the specified attributes by +attribute+.
@@ -49,15 +49,7 @@ class JsonSerializer
   #   # => [:id, :username, :github]
   #
   def self.attributes
-    @attributes ||= []
-  end
-
-  def self.association name, serializer
-    associations[name] = serializer if !associations[name]
-  end
-
-  def self.associations
-    @associations ||= {}
+    @attributes ||= {}
   end
 
   attr :object
@@ -77,32 +69,18 @@ class JsonSerializer
   protected
 
   def serializable_object # :nodoc:
-    object.respond_to?(:to_ary) ? serializable_array : serializable_hash
-  end
-
-  def serializable_hash # :nodoc:
-    attributes.merge associations
-  end
-
-  def serializable_array # :nodoc:
-    object.to_ary.map { |item| self.class.new(item).serializable_hash }
-  end
-
-  private
-
-  def attributes
-    self.class.attributes.each_with_object({}) do |name, hash|
-      hash[name] = result_from_self_or_object name
+    if object.respond_to?(:to_ary)
+      object.to_ary.map { |item| self.class.new(item).attributes }
+    else
+      attributes
     end
   end
 
-  def associations
-    self.class.associations.each_with_object({}) do |(name, serializer), hash|
-      hash[name] = serializer.new(result_from_self_or_object(name)).serializable_object
+  def attributes # :nodoc:
+    self.class.attributes.each_with_object({}) do |(name, serializer), hash|
+      data = self.class.method_defined?(name) ? self.send(name) : object.send(name)
+      data = serializer.new(data).serializable_object if serializer
+      hash[name] = data
     end
-  end
-
-  def result_from_self_or_object name
-    self.class.method_defined?(name) ? self.send(name) : object.send(name)
   end
 end
