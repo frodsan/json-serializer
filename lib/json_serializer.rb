@@ -34,7 +34,7 @@ class JsonSerializer
   #   # => {"id":1,"username":"skrillex","full_name":"sonny moore"}
   #
   def self.attribute name, serializer = nil
-    attributes[name] = serializer if !attributes[name]
+    attributes[name] ||= serializer
   end
 
   # Return an array with the specified attributes by +attribute+.
