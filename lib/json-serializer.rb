@@ -66,8 +66,6 @@ class JsonSerializer
     end
   end
 
-  protected
-
   def serializable_object # :nodoc:
     if object.respond_to?(:to_ary)
       object.to_ary.map { |item| self.class.new(item).attributes }
@@ -75,6 +73,7 @@ class JsonSerializer
       attributes
     end
   end
+  protected :serializable_object
 
   def attributes # :nodoc:
     self.class.attributes.each_with_object({}) do |(name, serializer), hash|
