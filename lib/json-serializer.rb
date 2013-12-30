@@ -37,15 +37,17 @@ class JsonSerializer
     attributes[name] ||= serializer
   end
 
-  # Returns an array with the specified attributes by +attribute+.
+  # Returns a hash with the specified attributes as keys and their defined
+  # serializers as values.
   #
   #   class UserSerializer < JsonSerializer
   #     attribute :id
   #     attribute :username
+  #     attribute :roles, :RoleSerializer
   #   end
   #
   #   UserSerializer.attributes
-  #   # => [:id, :username, :github]
+  #   # => {:id=>nil, :username=>nil, :roles=>:RoleSerializer}
   #
   def self.attributes
     @attributes ||= {}
