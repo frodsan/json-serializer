@@ -1,1 +1,1 @@
-require 'json-serializer'
+require_relative 'json-serializer'

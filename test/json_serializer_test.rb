@@ -1,5 +1,5 @@
 require "cutest"
-require_relative "../lib/json-serializer"
+require_relative "../lib/json_serializer"
 
 Post = Struct.new(:id, :title, :created_at)
 
