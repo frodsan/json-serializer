@@ -1,7 +1,7 @@
-require 'cutest'
-require_relative '../lib/json-serializer'
+require "cutest"
+require_relative "../lib/json-serializer"
 
-Post = Struct.new :id, :title, :created_at
+Post = Struct.new(:id, :title, :created_at)
 
 class PostSerializer < JsonSerializer
   attribute :id
@@ -13,25 +13,23 @@ class PostSerializer < JsonSerializer
   end
 end
 
-test 'converts defined attributes into json' do
-  post = Post.new 1, 'tsunami'
+test "converts defined attributes into json" do
+  post = Post.new(1, "tsunami")
 
   result = {
     id: 1,
-    title: 'tsunami',
-    slug: '1-tsunami'
-  }
+    title: "tsunami",
+    slug: "1-tsunami"
+  }.to_json
 
-  assert_equal result.to_json, PostSerializer.new(post).to_json
+  assert_equal result, PostSerializer.new(post).to_json
 end
 
 class User
   attr_accessor :id, :name, :lastname, :organization, :organizations
 
   def initialize attrs={}
-    attrs.each do |name, value|
-      send "#{name}=", value
-    end
+    attrs.each { |name, value| send "#{name}=", value }
   end
 end
 
@@ -40,19 +38,19 @@ class UserSerializer < JsonSerializer
   attribute :fullname
 
   def fullname
-    object.name + ' ' + object.lastname
+    object.name + " " + object.lastname
   end
 end
 
-test 'serializes array' do
+test "serializes array" do
   users = [
-    User.new(id: 1, name: 'sonny', lastname: 'moore'),
-    User.new(id: 2, name: 'anton', lastname: 'zaslavski')
+    User.new(id: 1, name: "sonny", lastname: "moore"),
+    User.new(id: 2, name: "anton", lastname: "zaslavski")
   ]
 
   result = [
-    { id: 1, fullname: 'sonny moore' },
-    { id: 2, fullname: 'anton zaslavski' }
+    { id: 1, fullname: "sonny moore" },
+    { id: 2, fullname: "anton zaslavski" }
   ].to_json
 
   assert_equal result, UserSerializer.new(users).to_json
@@ -71,43 +69,43 @@ class UserWithOrganizationSerializer < JsonSerializer
   attribute :organization, OrganizationSerializer
 end
 
-test 'serializes object with association' do
-  user = User.new id: 1, name: 'sonny'
-  user.organization = Organization.new 1, 'enterprise'
+test "serializes object with association" do
+  user = User.new(id: 1, name: "sonny")
+  user.organization = Organization.new(1, "enterprise")
 
   result = {
     id: 1,
-    name: 'sonny',
+    name: "sonny",
     organization: {
       id: 1,
-      name: 'enterprise'
+      name: "enterprise"
     }
   }.to_json
 
   assert_equal result, UserWithOrganizationSerializer.new(user).to_json
 end
 
-test 'serializes array with association' do
+test "serializes array with association" do
   users = [
-    User.new(id: 1, name: 'sonny', organization: Organization.new(1, 'enterprise')),
-    User.new(id: 2, name: 'anton', organization: Organization.new(2, 'evil'))
+    User.new(id: 1, name: "sonny", organization: Organization.new(1, "enterprise")),
+    User.new(id: 2, name: "anton", organization: Organization.new(2, "evil"))
   ]
 
   result = [
     {
       id: 1,
-      name: 'sonny',
+      name: "sonny",
       organization: {
         id: 1,
-        name: 'enterprise'
+        name: "enterprise"
       }
     },
     {
       id: 2,
-      name: 'anton',
+      name: "anton",
       organization: {
         id: 2,
-        name: 'evil'
+        name: "evil"
       }
     }
   ].to_json
@@ -121,24 +119,24 @@ class UserWithOrganizationsSerializer < JsonSerializer
   attribute :organizations, OrganizationSerializer
 end
 
-test 'serializes object with collection' do
-  user = User.new id: 1, name: 'sonny'
+test "serializes object with collection" do
+  user = User.new(id: 1, name: "sonny")
   user.organizations = [
-    Organization.new(1, 'enterprise'),
-    Organization.new(2, 'evil')
+    Organization.new(1, "enterprise"),
+    Organization.new(2, "evil")
   ]
 
   result = {
     id: 1,
-    name: 'sonny',
+    name: "sonny",
     organizations: [
       {
         id: 1,
-        name: 'enterprise'
+        name: "enterprise"
       },
       {
         id: 2,
-        name: 'evil'
+        name: "evil"
       }
     ]
   }.to_json
@@ -146,21 +144,21 @@ test 'serializes object with collection' do
   assert_equal result, UserWithOrganizationsSerializer.new(user).to_json
 end
 
-test 'serializes array with nested collections' do
+test "serializes array with nested collections" do
   users = [
     User.new(
       id: 1,
-      name: 'sonny',
+      name: "sonny",
       organizations: [
-        Organization.new(1, 'enterprise'),
-        Organization.new(2, 'evil'),
+        Organization.new(1, "enterprise"),
+        Organization.new(2, "evil"),
       ]
     ),
     User.new(
       id: 2,
-      name: 'anton',
+      name: "anton",
       organizations: [
-        Organization.new(3, 'showtek')
+        Organization.new(3, "showtek")
       ]
     )
   ]
@@ -168,25 +166,25 @@ test 'serializes array with nested collections' do
   result = [
     {
       id: 1,
-      name: 'sonny',
+      name: "sonny",
       organizations: [
         {
           id: 1,
-          name: 'enterprise'
+          name: "enterprise"
         },
         {
           id: 2,
-          name: 'evil'
+          name: "evil"
         }
       ]
     },
     {
       id: 2,
-      name: 'anton',
+      name: "anton",
       organizations: [
         {
           id: 3,
-          name: 'showtek'
+          name: "showtek"
         }
       ]
     }
@@ -199,32 +197,32 @@ class UserWithCustomOrganizationSerializer < JsonSerializer
   attribute :organizations, OrganizationSerializer
 
   def organizations
-    [ Organization.new(1, 'enterprise') ]
+    [Organization.new(1, "enterprise")]
   end
 end
 
-test 'implements association method and returns different result' do
+test "implements association method and returns different result" do
   user = User.new
 
-  result = { organizations: [ { id: 1, name: 'enterprise' } ] }.to_json
+  result = { organizations: [ { id: 1, name: "enterprise" } ] }.to_json
 
   assert_equal result, UserWithCustomOrganizationSerializer.new(user).to_json
 end
 
-Person = Struct.new :name
+Person = Struct.new(:name)
 
-class PersonSerialize < JsonSerializer
+class PersonSerializer < JsonSerializer
   attribute :name
 end
 
-test 'allows root option' do
-  person = Person.new 'sonny'
+test "allows root option" do
+  person = Person.new("sonny")
 
   result = { person: person.to_h }.to_json
 
-  assert_equal result, PersonSerialize.new(person).to_json(root: :person)
+  assert_equal result, PersonSerializer.new(person).to_json(root: :person)
 
   result = { people: [person.to_h] }.to_json
 
-  assert_equal result, PersonSerialize.new([person]).to_json(root: :people)
+  assert_equal result, PersonSerializer.new([person]).to_json(root: :people)
 end

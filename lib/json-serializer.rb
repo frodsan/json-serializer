@@ -1,14 +1,14 @@
-require 'json'
+require "json"
 
 class JsonSerializer
-  # Specify which attributes you would like to include in the outputted JSON.
+  # Specifies which attributes you would like to include in the outputted JSON.
   #
   #   class UserSerializer < JsonSerializer
   #     attribute :id
   #     attribute :username
   #   end
   #
-  #   user = User.create username: 'skrillex', admin: true
+  #   user = User.create(username: "skrillex", admin: true)
   #
   #   UserSerializer.new(user).to_json
   #   # => {"id":1,"username":"skrillex"}
@@ -24,20 +24,20 @@ class JsonSerializer
   #     attribute :full_name
   #
   #     def full_name
-  #       object.first_name + ' ' + object.last_name
+  #       object.first_name + " " + object.last_name
   #     end
   #   end
   #
-  #   user = User.create username: 'skrillex', first_name: 'sonny', last_name: 'moore'
+  #   user = User.create(username: "skrillex", first_name: "sonny", last_name: "moore")
   #
   #   UserSerializer.new(user).to_json
   #   # => {"id":1,"username":"skrillex","full_name":"sonny moore"}
   #
-  def self.attribute name, serializer = nil
+  def self.attribute(name, serializer = nil)
     attributes[name] ||= serializer
   end
 
-  # Return an array with the specified attributes by +attribute+.
+  # Returns an array with the specified attributes by +attribute+.
   #
   #   class UserSerializer < JsonSerializer
   #     attribute :id
@@ -54,11 +54,11 @@ class JsonSerializer
 
   attr :object
 
-  def initialize object
+  def initialize(object)
     @object = object
   end
 
-  def to_json options={}
+  def to_json(options={})
     if root = options[:root]
       { root => serializable_object }.to_json
     else
