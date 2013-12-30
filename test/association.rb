@@ -1,62 +1,7 @@
-require "cutest"
-require_relative "../lib/json_serializer"
+require_relative "helper"
 
-Post = Struct.new(:id, :title, :created_at)
-
-class PostSerializer < JsonSerializer
-  attribute :id
-  attribute :title
-  attribute :slug
-
-  def slug
-    "#{ object.id }-#{ object.title }"
-  end
-end
-
-test "converts defined attributes into json" do
-  post = Post.new(1, "tsunami")
-
-  result = {
-    id: 1,
-    title: "tsunami",
-    slug: "1-tsunami"
-  }.to_json
-
-  assert_equal result, PostSerializer.new(post).to_json
-end
-
-class User
-  attr_accessor :id, :name, :lastname, :organization, :organizations
-
-  def initialize attrs={}
-    attrs.each { |name, value| send "#{name}=", value }
-  end
-end
-
-class UserSerializer < JsonSerializer
-  attribute :id
-  attribute :fullname
-
-  def fullname
-    object.name + " " + object.lastname
-  end
-end
-
-test "serializes array" do
-  users = [
-    User.new(id: 1, name: "sonny", lastname: "moore"),
-    User.new(id: 2, name: "anton", lastname: "zaslavski")
-  ]
-
-  result = [
-    { id: 1, fullname: "sonny moore" },
-    { id: 2, fullname: "anton zaslavski" }
-  ].to_json
-
-  assert_equal result, UserSerializer.new(users).to_json
-end
-
-Organization = Struct.new :id, :name, :created_at
+User = OpenStruct
+Organization = OpenStruct
 
 class OrganizationSerializer < JsonSerializer
   attribute :id
@@ -71,7 +16,7 @@ end
 
 test "serializes object with association" do
   user = User.new(id: 1, name: "sonny")
-  user.organization = Organization.new(1, "enterprise")
+  user.organization = Organization.new(id: 1, name: "enterprise")
 
   result = {
     id: 1,
@@ -87,8 +32,8 @@ end
 
 test "serializes array with association" do
   users = [
-    User.new(id: 1, name: "sonny", organization: Organization.new(1, "enterprise")),
-    User.new(id: 2, name: "anton", organization: Organization.new(2, "evil"))
+    User.new(id: 1, name: "sonny", organization: Organization.new(id: 1, name: "enterprise")),
+    User.new(id: 2, name: "anton", organization: Organization.new(id: 2, name: "evil"))
   ]
 
   result = [
@@ -122,8 +67,8 @@ end
 test "serializes object with collection" do
   user = User.new(id: 1, name: "sonny")
   user.organizations = [
-    Organization.new(1, "enterprise"),
-    Organization.new(2, "evil")
+    Organization.new(id: 1, name: "enterprise"),
+    Organization.new(id: 2, name: "evil")
   ]
 
   result = {
@@ -150,15 +95,15 @@ test "serializes array with nested collections" do
       id: 1,
       name: "sonny",
       organizations: [
-        Organization.new(1, "enterprise"),
-        Organization.new(2, "evil"),
+        Organization.new(id: 1, name: "enterprise"),
+        Organization.new(id: 2, name: "evil"),
       ]
     ),
     User.new(
       id: 2,
       name: "anton",
       organizations: [
-        Organization.new(3, "showtek")
+        Organization.new(id: 3, name: "showtek")
       ]
     )
   ]
@@ -197,7 +142,7 @@ class UserWithCustomOrganizationSerializer < JsonSerializer
   attribute :organizations, :OrganizationSerializer
 
   def organizations
-    [Organization.new(1, "enterprise")]
+    [Organization.new(id: 1, name: "enterprise")]
   end
 end
 
@@ -207,22 +152,4 @@ test "implements association method and returns different result" do
   result = { organizations: [ { id: 1, name: "enterprise" } ] }.to_json
 
   assert_equal result, UserWithCustomOrganizationSerializer.new(user).to_json
-end
-
-Person = Struct.new(:name)
-
-class PersonSerializer < JsonSerializer
-  attribute :name
-end
-
-test "allows root option" do
-  person = Person.new("sonny")
-
-  result = { person: person.to_h }.to_json
-
-  assert_equal result, PersonSerializer.new(person).to_json(root: :person)
-
-  result = { people: [person.to_h] }.to_json
-
-  assert_equal result, PersonSerializer.new([person]).to_json(root: :people)
 end
