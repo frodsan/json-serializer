@@ -1,6 +1,16 @@
 require "json"
 
 class JsonSerializer
+  module Utils # :nodoc:
+    def self.const(context, name)
+      case name
+      when Symbol, String
+        context.get_const(name)
+      else name
+      end
+    end
+  end
+
   # Specifies which attributes you would like to include in the outputted JSON.
   #
   #   class UserSerializer < JsonSerializer
@@ -42,7 +52,6 @@ class JsonSerializer
   #   class UserSerializer < JsonSerializer
   #     attribute :id
   #     attribute :username
-  #     attribute :github
   #   end
   #
   #   UserSerializer.attributes
@@ -79,7 +88,7 @@ class JsonSerializer
   def attributes # :nodoc:
     self.class.attributes.each_with_object({}) do |(name, serializer), hash|
       data = self.class.method_defined?(name) ? self.send(name) : object.send(name)
-      data = serializer.new(data).serializable_object if serializer
+      data = Utils.const(self.class, serializer).new(data).serializable_object if serializer
       hash[name] = data
     end
   end
