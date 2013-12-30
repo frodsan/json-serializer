@@ -5,7 +5,7 @@ class JsonSerializer
     def self.const(context, name)
       case name
       when Symbol, String
-        context.get_const(name)
+        context.const_get(name)
       else name
       end
     end
