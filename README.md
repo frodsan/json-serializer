@@ -39,7 +39,7 @@ UserSerializer.new(user).to_json
 # => "{\"id\":1,\"first_name\":\"Sonny\",\"last_name\":\"Moore\"}"
 ```
 
-You can add a root to the outputted json through the `root` option:
+You can add a root to the outputted json through the `:root` option:
 
 ```ruby
 user = User.create(first_name: "Sonny", last_name: "Moore", admin: true)
@@ -70,7 +70,7 @@ PostSerializer.new(posts).to_json
 
 Given the example above, it will return a json output like:
 
-```ruby
+```json
 [
   { "id": 1, "title": "Post 1", "body": "Hello!" },
   { "id": 2, "title": "Post 2", "body": "Goodbye!" }
@@ -168,7 +168,7 @@ PostSerializer.new(post).to_json
 
 The example above returns the following json output:
 
-```ruby
+```json
 {
   "id": 1,
   "title": "Hello!",
