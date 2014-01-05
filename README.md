@@ -16,7 +16,7 @@ Usage
 
 Here's a simple example:
 
-```
+```ruby
 class UserSerializer < JsonSerializer
   attribute :id
   attribute :first_name
@@ -27,7 +27,7 @@ end
 In this case, we defined a new serializer class and specified the attributes
 we would like to include in the serialized form.
 
-```
+```ruby
 user = User.create(first_name: "Sonny", last_name: "Moore", admin: true)
 
 UserSerializer.new(user).to_json
@@ -40,7 +40,7 @@ properties in addition to the object attributes or customize the result of a
 specified attribute. You can access the object being serialized with the +object+
 method.
 
-```
+```ruby
 class UserSerializer < JsonSerializer
   attribute :id
   attribute :first_name
@@ -58,4 +58,4 @@ UserSerializer.new(user).to_json
 # => "{\"id\":1,\"first_name\":\"Sonny\",\"last_name\":\"Moore\",\"full_name\":\"Sonny Moore\"}"
 ```
 
-[active_model_serializers](https://github.com/rails-api/active_model_serializers)
+[active_model_serializers]: https://github.com/rails-api/active_model_serializers
