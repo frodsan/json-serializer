@@ -136,7 +136,7 @@ end
 You can specify a serializer class for a defined attribute. This is very useful
 for serializing each element of an association.
 
-```
+```ruby
 require "json_serializer"
 
 class UserSerializer < JsonSerializer
@@ -168,7 +168,7 @@ PostSerializer.new(post).to_json
 
 The example above returns the following json output:
 
-```
+```ruby
 {
   "id": 1,
   "title": "Hello!",
