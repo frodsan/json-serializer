@@ -26,8 +26,8 @@ class JsonSerializer
   protected
 
   def serializable_object
-    if object.respond_to?(:to_ary)
-      object.to_ary.map { |item| self.class.new(item).attributes }
+    if object.kind_of?(Enumerable)
+      object.to_a.map { |item| self.class.new(item).attributes }
     else
       attributes
     end
