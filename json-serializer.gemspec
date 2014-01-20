@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.authors     = ["Francesco Rodríguez"]
   s.email       = ["frodsan@me.com"]
-  s.homepage    = "https://github.com/frodsan/mocoso"
+  s.homepage    = "https://github.com/frodsan/json-serializer"
   s.license     = "Unlicense"
 
   s.files = `git ls-files`.split("\n")
