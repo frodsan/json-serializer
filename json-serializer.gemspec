@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "json-serializer"
-  s.version     = "0.0.4"
+  s.version     = "0.0.5"
   s.summary     = "Customize JSON ouput through serializer objects."
   s.description = s.summary
   s.authors     = ["Francesco Rodríguez"]
