@@ -106,7 +106,7 @@ UserSerializer.new(user).to_json
 ```
 
 If you would like direct, low-level control of attribute serialization, you can
-completely override the attributes method to return the hash you need:
+completely override `to_hash` method to return the hash you need:
 
 ```ruby
 require "json_serializer"
@@ -116,16 +116,16 @@ class UserSerializer < JsonSerializer
   attribute :first_name
   attribute :last_name
 
-  attr :scope
+  attr :current_user
 
-  def initialize(object, scope)
+  def initialize(object, current_user)
     super(object)
-    @scope = scope
+    @current_user = current_user
   end
 
-  def attributes
+  def to_hash
     hash = super
-    hash.merge!(admin: object.admin) if scope.admin?
+    hash.merge!(admin: object.admin) if current_user.admin?
     hash
   end
 end

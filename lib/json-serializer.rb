@@ -1,6 +1,16 @@
 require "json"
 
 class JsonSerializer
+  module Utils
+    def self.const(context, name)
+      case name
+      when Symbol, String
+        context.const_get(name)
+      else name
+      end
+    end
+  end
+
   def self.attribute(name, serializer = nil)
     attributes[name] ||= serializer
   end
@@ -27,27 +37,17 @@ class JsonSerializer
 
   def serializable_object
     if object.kind_of?(Enumerable)
-      object.to_a.map { |item| self.class.new(item).attributes }
+      object.to_a.map { |item| self.class.new(item).to_hash }
     else
-      attributes
+      to_hash
     end
   end
 
-  def attributes
+  def to_hash
     self.class.attributes.each_with_object({}) do |(name, serializer), hash|
       data = self.class.method_defined?(name) ? self.send(name) : object.send(name)
       data = Utils.const(self.class, serializer).new(data).serializable_object if serializer
       hash[name] = data
-    end
-  end
-
-  module Utils
-    def self.const(context, name)
-      case name
-      when Symbol, String
-        context.const_get(name)
-      else name
-      end
     end
   end
 end
