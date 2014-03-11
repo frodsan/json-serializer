@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Francesco Rodríguez"]
   s.email       = ["frodsan@me.com"]
   s.homepage    = "https://github.com/frodsan/json-serializer"
-  s.license     = "Unlicense"
+  s.license     = "MIT"
 
   s.files = `git ls-files`.split("\n")
 
