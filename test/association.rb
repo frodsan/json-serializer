@@ -30,6 +30,19 @@ test "serializes object with association" do
   assert_equal result, UserWithOrganizationSerializer.new(user).to_json
 end
 
+test "serializes object with a nil association" do
+  user = User.new(id: 1, name: "sonny")
+  user.organization = nil
+
+  result = {
+    id: 1,
+    name: "sonny",
+    organization: nil
+  }.to_json
+
+  assert_equal result, UserWithOrganizationSerializer.new(user).to_json
+end
+
 test "serializes array with association" do
   users = [
     User.new(id: 1, name: "sonny", organization: Organization.new(id: 1, name: "enterprise")),
