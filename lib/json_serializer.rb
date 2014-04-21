@@ -38,7 +38,7 @@ class JsonSerializer
   def serializable_object
     return nil unless @object
 
-    if @object.kind_of?(Enumerable)
+    if @object.respond_to?(:to_a)
       @object.to_a.map { |item| self.class.new(item).to_hash }
     else
       to_hash
