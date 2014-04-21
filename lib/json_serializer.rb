@@ -38,8 +38,8 @@ class JsonSerializer
   def serializable_object
     return nil unless @object
 
-    if object.kind_of?(Enumerable)
-      object.to_a.map { |item| self.class.new(item).to_hash }
+    if @object.kind_of?(Enumerable)
+      @object.to_a.map { |item| self.class.new(item).to_hash }
     else
       to_hash
     end
@@ -47,7 +47,7 @@ class JsonSerializer
 
   def to_hash
     self.class.attributes.each_with_object({}) do |(name, serializer), hash|
-      data = self.class.method_defined?(name) ? self.send(name) : object.send(name)
+      data = self.class.method_defined?(name) ? self.send(name) : @object.send(name)
       data = Utils.const(self.class, serializer).new(data).serializable_object if serializer
       hash[name] = data
     end
