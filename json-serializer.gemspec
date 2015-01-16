@@ -3,9 +3,9 @@ Gem::Specification.new do |s|
   s.version     = "0.0.8"
   s.summary     = "Customize JSON ouput through serializer objects."
   s.description = s.summary
-  s.authors     = ["Francesco Rodríguez"]
-  s.email       = ["frodsan@me.com"]
-  s.homepage    = "https://github.com/frodsan/json-serializer"
+  s.authors     = ["Francesco Rodríguez", "Mayn Kjær"]
+  s.email       = ["frodsan@me.com", "mayn.kjaer@gmail.com"]
+  s.homepage    = "https://github.com/harmoni/json-serializer"
   s.license     = "MIT"
 
   s.files = `git ls-files`.split("\n")
