@@ -11,6 +11,12 @@ class JsonSerializer
     end
   end
 
+  def self.inherited(subclass)
+    attributes.each do |name, serializer|
+      subclass.attribute(name, serializer)
+    end
+  end
+
   def self.attribute(name, serializer = nil)
     attributes[name] ||= serializer
   end

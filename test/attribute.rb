@@ -47,3 +47,18 @@ test "serializes array" do
 
   assert_equal result, UserSerializer.new(users).to_json
 end
+
+class ParentSerializer < JsonSerializer
+  attribute :parent
+end
+
+class ChildSerializer < ParentSerializer
+  attribute :child
+end
+
+test "inheritance" do
+  parent = ParentSerializer.attributes
+  child = ChildSerializer.attributes
+
+  assert_equal(parent.merge(child: nil), child)
+end
