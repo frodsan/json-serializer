@@ -10,5 +10,6 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files`.split("\n")
 
-  s.add_development_dependency "cutest"
+  s.add_development_dependency "bundler", "~> 1.10"
+  s.add_development_dependency "cutest", "~> 1.2"
 end

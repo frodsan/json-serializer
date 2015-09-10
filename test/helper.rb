@@ -1,3 +1,4 @@
+require "bundler/setup"
 require "cutest"
-require_relative "../lib/json_serializer"
 require "ostruct"
+require_relative "../lib/json_serializer"
