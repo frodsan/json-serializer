@@ -1,5 +1,3 @@
-require_relative "helper"
-
 Person = OpenStruct
 
 class PersonSerializer < JsonSerializer

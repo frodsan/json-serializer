@@ -1,5 +1,3 @@
-require_relative "helper"
-
 User = OpenStruct
 Organization = OpenStruct
 

@@ -1,5 +1,3 @@
-require_relative "helper"
-
 Post = OpenStruct
 User = OpenStruct
 
