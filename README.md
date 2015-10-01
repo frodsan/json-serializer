@@ -3,19 +3,8 @@ json-serializer
 
 Customizes JSON output through serializer objects.
 
-A minimal implementation of [active_model_serializers][active_model_serializers] gem.
-
-Installation
-------------
-
-```
-gem install json-serializer
-```
-
 Usage
 -----
-
-### Basics
 
 Here's a simple example:
 
@@ -48,7 +37,8 @@ UserSerializer.new(user).to_json(root: :user)
 # => "{\"user\":{\"id\":1,\"first_name\":\"Sonny\",\"last_name\":\"Moore\"}}"
 ```
 
-### Arrays
+Arrays
+------
 
 A serializer can be used for objects contained in an array:
 
@@ -77,7 +67,8 @@ Given the example above, it will return a json output like:
 ]
 ```
 
-### Attributes
+Attributes
+----------
 
 By default, before looking up the attribute on the object, it checks the presence
 of a method with the name of the attribute. This allow serializes to include
@@ -131,7 +122,8 @@ class UserSerializer < JsonSerializer
 end
 ```
 
-### Attributes with Custom Serializer
+Attributes with Custom Serializer
+---------------------------------
 
 You can specify a serializer class for a defined attribute. This is very useful
 for serializing each element of an association.
@@ -190,6 +182,21 @@ The example above returns the following json output:
       }
     ]
 }
+```
+
+Contributing
+------------
+
+- Fork the project.
+- Use `make install` to install dependencies.
+- Use `make test` to run the test suite.
+- Create a pull request with your changes.
+
+Installation
+------------
+
+```
+gem install json-serializer
 ```
 
 [active_model_serializers]: https://github.com/rails-api/active_model_serializers
