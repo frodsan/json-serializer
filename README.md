@@ -1,7 +1,28 @@
-json-serializer
+json-serializer [![Build Status](https://travis-ci.org/frodsan/json-serializer.svg)](https://travis-ci.org/frodsan/json-serializer)
 ===============
 
 Customizes JSON output through serializer objects.
+
+Installation
+------------
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem "json-serializer"
+```
+
+And then execute:
+
+```
+$ bundle
+```
+
+Or install it yourself as:
+
+```
+$ gem install json-serializer
+```
 
 Usage
 -----
@@ -187,16 +208,31 @@ The example above returns the following json output:
 Contributing
 ------------
 
-- Fork the project.
-- Use `make install` to install dependencies.
-- Use `make test` to run the test suite.
-- Create a pull request with your changes.
-
-Installation
-------------
+Fork the project with:
 
 ```
-gem install json-serializer
+$ git clone git@github.com:frodsan/json-serializer.git
 ```
+
+To install dependencies, use:
+
+```
+$ bundle install
+```
+
+To run the test suite, do:
+
+```
+$ rake test
+```
+
+For bug reports and pull requests use [GitHub][issues].
+
+License
+-------
+
+This gem is released under the [MIT License][mit].
 
 [active_model_serializers]: https://github.com/rails-api/active_model_serializers
+[mit]: http://www.opensource.org/licenses/MIT
+[issues]: https://github.com/frodsan/json-serializer/issues
