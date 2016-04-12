@@ -128,7 +128,7 @@ class UserSerializer < JsonSerializer
   attribute :first_name
   attribute :last_name
 
-  attr :current_user
+  attr_reader :current_user
 
   def initialize(object, current_user)
     super(object)
