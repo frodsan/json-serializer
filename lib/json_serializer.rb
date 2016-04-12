@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "json"
 
 class JsonSerializer
@@ -25,14 +26,16 @@ class JsonSerializer
     @attributes ||= {}
   end
 
-  attr :object
+  attr_reader :object
 
   def initialize(object)
     @object = object
   end
 
-  def to_json(options={})
-    if root = options[:root]
+  def to_json(options = {})
+    root = options[:root]
+
+    if root
       { root => serializable_object }.to_json
     else
       serializable_object.to_json
@@ -42,10 +45,10 @@ class JsonSerializer
   protected
 
   def serializable_object
-    return nil unless @object
+    return nil unless object
 
-    if @object.respond_to?(:to_a)
-      @object.to_a.map { |item| self.class.new(item).to_hash }
+    if object.respond_to?(:to_a)
+      object.to_a.map { |item| self.class.new(item).to_hash }
     else
       to_hash
     end
@@ -53,8 +56,14 @@ class JsonSerializer
 
   def to_hash
     self.class.attributes.each_with_object({}) do |(name, serializer), hash|
-      data = self.class.method_defined?(name) ? self.send(name) : @object.send(name)
-      data = Utils.const(self.class, serializer).new(data).serializable_object if serializer
+      data = self.class.method_defined?(name) ? send(name) : object.send(name)
+
+      if serializer
+        serializer_class = Utils.const(self.class, serializer)
+
+        data = serializer_class.new(data).serializable_object
+      end
+
       hash[name] = data
     end
   end

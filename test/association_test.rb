@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative "helper"
 
 class OrganizationSerializer < JsonSerializer
@@ -19,6 +20,7 @@ class UserWithCustomOrganizationSerializer < JsonSerializer
   end
 end
 
+# rubocop:disable ClassLength
 class AssociationTest < Minitest::Test
   test "serializes object with association" do
     user = User.new(id: 1, name: "sonny")
@@ -51,8 +53,16 @@ class AssociationTest < Minitest::Test
 
   test "serializes array with association" do
     users = [
-      User.new(id: 1, name: "sonny", organization: Organization.new(id: 1, name: "enterprise")),
-      User.new(id: 2, name: "anton", organization: Organization.new(id: 2, name: "evil"))
+      User.new(
+        id: 1,
+        name: "sonny",
+        organization: Organization.new(id: 1, name: "enterprise")
+      ),
+      User.new(
+        id: 2,
+        name: "anton",
+        organization: Organization.new(id: 2, name: "evil")
+      )
     ]
 
     result = [
@@ -115,7 +125,7 @@ class AssociationTest < Minitest::Test
         name: "sonny",
         organizations: [
           Organization.new(id: 1, name: "enterprise"),
-          Organization.new(id: 2, name: "evil"),
+          Organization.new(id: 2, name: "evil")
         ]
       ),
       User.new(
@@ -160,7 +170,7 @@ class AssociationTest < Minitest::Test
   test "implements association method and returns different result" do
     user = User.new
 
-    result = { organizations: [ { id: 1, name: "enterprise" } ] }.to_json
+    result = { organizations: [{ id: 1, name: "enterprise" }] }.to_json
 
     assert_equal result, UserWithCustomOrganizationSerializer.new(user).to_json
   end
