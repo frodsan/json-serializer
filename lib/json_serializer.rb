@@ -33,35 +33,34 @@ class JsonSerializer
   end
 
   def to_json(root: nil)
-    result = serializable_object
+    result = decorate
     result = { root => result } if root
 
     result.to_json
   end
 
-  protected
-
-  def serializable_object
+  def decorate
     return nil unless object
 
     if object.respond_to?(:to_a)
-      object.to_a.map { |item| self.class.new(item).to_hash }
+      to_arry
     else
       to_hash
     end
   end
 
+  protected
+
+  def to_arry
+    object.to_a.map { |o| self.class.new(o).to_hash }
+  end
+
   def to_hash
     self.class.attributes.each_with_object({}) do |(name, serializer), hash|
-      data = self.class.method_defined?(name) ? send(name) : object.send(name)
+      res = self.class.method_defined?(name) ? send(name) : object.send(name)
+      res = Utils.const(self.class, serializer).new(res).decorate if serializer
 
-      if serializer
-        serializer_class = Utils.const(self.class, serializer)
-
-        data = serializer_class.new(data).serializable_object
-      end
-
-      hash[name] = data
+      hash[name] = res
     end
   end
 end
