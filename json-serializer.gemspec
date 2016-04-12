@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name        = "json-serializer"
-  s.version     = "0.0.9"
+  s.version     = "1.0.0"
   s.summary     = "Customize JSON ouput through serializer objects"
   s.description = s.summary
   s.author      = "Francesco Rodríguez"
-  s.email       = "frodsan@protonmail.ch"
+  s.email       = "hello@frodsan.com"
   s.homepage    = "https://github.com/frodsan/json-serializer"
   s.license     = "MIT"
 
